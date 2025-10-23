@@ -1,0 +1,28 @@
+name: Quark Auto Signin
+
+on:
+  schedule:
+    # 每天UTC时间1点（北京时间9点）运行，cron表达式语法为'分 时 * * *'
+    - cron: '0 1 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  signin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Quark sign-in script
+        env:
+          # 将你在夸克App中抓包获取的签到链接填入此处
+          COOKIE_QUARK: ${{ secrets.COOKIE_QUARK }}
+        run: python checkIn_Quark.py
